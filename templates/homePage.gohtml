@@ -1,0 +1,16 @@
+{{template "header" .}}
+
+<div id="content" class="container">
+    <h2>Okta Hosted Login + Golang Example</h2>
+
+{{if .IsAuthenticated}}
+<title>My Page</title>
+</head>
+<body>
+<p>The date today is {{.Date}}</p>
+<p>And the time is {{.Time}}</p>
+</body>
+{{end}}
+
+</div>
+{{template "footer"}}

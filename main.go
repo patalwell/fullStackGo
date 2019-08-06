@@ -20,25 +20,27 @@ var tpl *template.Template
 var sessionStore = sessions.NewCookieStore([]byte("okta-hosted-login-session-store"))
 var state = "ApplicationState"
 var nonce = "NonceNotSetYet"
+var mux *http.ServeMux
 
 
 func init() {
 
 	tpl = template.Must(template.ParseGlob("templates/*"))
+	mux = http.NewServeMux()
 }
 
 func main() {
 	//oktaUtils.ParseEnvironment()
 
-	http.HandleFunc("/", HomeHandler)
-	http.HandleFunc("/login", LoginHandler)
-	http.HandleFunc("/sample",samplePage)
-	http.HandleFunc("/authorization-code/callback", AuthCodeCallbackHandler)
-	http.HandleFunc("/profile", ProfileHandler)
-	http.HandleFunc("/logout", LogoutHandler)
+	mux.HandleFunc("/", HomeHandler)
+	mux.HandleFunc("/login", LoginHandler)
+	mux.HandleFunc("/sample",samplePage)
+	mux.HandleFunc("/authorization-code/callback", AuthCodeCallbackHandler)
+	mux.HandleFunc("/profile", ProfileHandler)
+	mux.HandleFunc("/logout", LogoutHandler)
 
-	log.Println("Starting web server on localhost:8080")
-	log.Fatal(http.ListenAndServe("localhost:8080", nil))
+	log.Println("Starting web server on :8080")
+	log.Fatal(http.ListenAndServe(":8080", mux))
 }
 
 func samplePage(w http.ResponseWriter, r *http.Request) {
@@ -53,7 +55,7 @@ func samplePage(w http.ResponseWriter, r *http.Request) {
 		time.Now().Format("15:04:05")}
 
 	//parse the HTML template
-	t, err := template.ParseFiles("templates/homePage.html")
+	t, err := template.ParseFiles("templates/homePage.gohtml")
 	if err != nil {
 		log.Println("Template parsing error: ", err)
 	}
