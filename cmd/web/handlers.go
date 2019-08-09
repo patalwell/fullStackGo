@@ -26,7 +26,7 @@ var nonce = "NonceNotSetYet"
 
 func init() {
 
-	tpl = template.Must(template.ParseGlob("templates/*"))
+	tpl = template.Must(template.ParseGlob("static/templates/*"))
 
 }
 
