@@ -5,46 +5,31 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"os"
+	"strconv"
+	"time"
 	"github.com/gorilla/sessions"
 	verifier "github.com/okta/okta-jwt-verifier-golang"
 	oktaUtils "github.com/okta/samples-golang/okta-hosted-login/utils"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
-	"time"
-	"strconv"
 )
 
 var tpl *template.Template
 var sessionStore = sessions.NewCookieStore([]byte("okta-hosted-login-session-store"))
 var state = "ApplicationState"
 var nonce = "NonceNotSetYet"
-var mux *http.ServeMux
+
 
 
 func init() {
 
 	tpl = template.Must(template.ParseGlob("templates/*"))
-	mux = http.NewServeMux()
+
 }
 
-func main() {
-	//oktaUtils.ParseEnvironment()
-
-	mux.HandleFunc("/", HomeHandler)
-	mux.HandleFunc("/login", LoginHandler)
-	mux.HandleFunc("/sample",samplePage)
-	mux.HandleFunc("/authorization-code/callback", AuthCodeCallbackHandler)
-	mux.HandleFunc("/profile", ProfileHandler)
-	mux.HandleFunc("/logout", LogoutHandler)
-	mux.HandleFunc("/snippet/create", createSnippet)
-	mux.HandleFunc("/snippet", showSnippet)
-
-	log.Println("Starting web server on :8080")
-	log.Fatal(http.ListenAndServe(":8080", mux))
-}
 
 func createSnippet(w http.ResponseWriter, r *http.Request) {
 	// Use r.Method to check whether the request is using POST or not.
@@ -306,3 +291,4 @@ type Exchange struct {
 	Scope            string `json:"scope,omitempty"`
 	IdToken          string `json:"id_token,omitempty"`
 }
+
